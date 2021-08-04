@@ -29,9 +29,9 @@ jobs:
           channelId: live
           projectId: fiobabig-dashboard
       - name: Deploy to Firebase
-      uses: w9jds/firebase-action@master
-      with:
-        args: deploy --message \"${{ github.event.head_commit.message }}\"
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --message \"${{ github.event.head_commit.message }}\"
       env:
         FIREBASE_CLI_PREVIEWS: hostingchannels
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
