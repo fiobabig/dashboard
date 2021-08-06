@@ -32,8 +32,8 @@ jobs:
           FIREBASE_CLI_PREVIEWS: hostingchannels
       - name: Test Firebase rules
         run: |
-          npm install -g firebase-tools
-          yarn test
+          npm install -g firebase-tools          
+          yarn rules
       - uses: w9jds/firebase-action@master
         with:
           args: deploy --only firestore:rules
