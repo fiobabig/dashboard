@@ -33,7 +33,8 @@ jobs:
       - name: Test Firebase rules
         run: |
           npm install -g firebase-tools  
-          yarn install        
+          yarn install 
+          yarn emu       
           yarn rules
       - uses: w9jds/firebase-action@master
         with:
