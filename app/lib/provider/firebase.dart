@@ -25,14 +25,10 @@ final _userDocProvider = StreamProvider((ref) {
       );
 });
 
-final userProvider = StateProvider<User?>((ref) {
+final userProvider = StateNotifierProvider<UserNotifier, User?>((ref) {
   final userDoc = ref.watch(_userDocProvider);
 
-  if (userDoc.data?.value == null) {
-    return null;
-  }
-
-  return userDoc.data!.value;
+  return UserNotifier(userDoc.data?.value);
 });
 
 @immutable
@@ -49,4 +45,16 @@ class User {
 
   late final String uid;
   late final String name;
+}
+
+class UserNotifier extends StateNotifier<User?> {
+  UserNotifier(User? user) : super(user);
+
+  void signInAnonymously() {
+    FirebaseAuth.instance.signInAnonymously();
+  }
+
+  void signOut() {
+    FirebaseAuth.instance.signOut();
+  }
 }

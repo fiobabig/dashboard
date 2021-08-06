@@ -1,5 +1,4 @@
 import 'package:dashboard/provider/firebase.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -8,7 +7,8 @@ class App extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(userProvider).state;
+    final user = ref.watch(userProvider);
+
     return MaterialApp(
       home: Column(
         children: [
@@ -16,7 +16,7 @@ class App extends HookConsumerWidget {
             OutlinedButton(
               child: const Text('signin'),
               onPressed: () {
-                FirebaseAuth.instance.signInAnonymously();
+                ref.read(userProvider.notifier).signInAnonymously();
               },
             ),
           if (user != null) ...[
@@ -25,7 +25,7 @@ class App extends HookConsumerWidget {
             OutlinedButton(
               child: const Text('signout'),
               onPressed: () {
-                FirebaseAuth.instance.signOut();
+                ref.read(userProvider.notifier).signOut();
               },
             ),
           ]
