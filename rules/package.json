@@ -1,6 +1,7 @@
 {
   "devDependencies": {
-    "@firebase/rules-unit-testing": "^1.2.2",
+    "@firebase/rules-unit-testing": "^1.2.2",    
+    "firebase-admin": "^9.11.0",
     "@types/jest": "^26.0.20",
     "jest": "^26.6.3",
     "leaked-handles": "^5.2.0",
