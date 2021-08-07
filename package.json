@@ -7,7 +7,6 @@
   },
   "scripts": {
     "emu": "firebase emulators:start",
-    "rules": "yarn --cwd ./rules test",
-    "test": "firebase emulators:exec --only firestore jest"
+    "rules": "yarn --cwd ./rules test"
   }
 }
