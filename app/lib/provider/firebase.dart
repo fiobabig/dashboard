@@ -54,6 +54,16 @@ class UserNotifier extends StateNotifier<User?> {
     FirebaseAuth.instance.signInAnonymously();
   }
 
+  void signInWithEmailAndPassword(
+    String email,
+    String password,
+  ) {
+    FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+  }
+
   void signOut() {
     FirebaseAuth.instance.signOut();
   }
