@@ -9,7 +9,7 @@ void main() async {
 
   await Firebase.initializeApp();
 
-  await dotenv.load(fileName: '.env');
+  await dotenv.load(fileName: '.env.demo');
 
   runApp(
     const ProviderScope(
