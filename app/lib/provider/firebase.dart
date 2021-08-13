@@ -21,11 +21,13 @@ final _userDocProvider = StreamProvider((ref) {
   final doc = _db.doc('users/$uid');
 
   return doc.snapshots().map<User>(
-        (a) => User.fromMap(
-          uid: uid,
-          data: a.data()!,
-        ),
+    (a) {
+      return User.fromMap(
+        uid: uid,
+        data: a.data()!,
       );
+    },
+  );
 });
 
 final userProvider = StateNotifierProvider<UserNotifier, User?>((ref) {

@@ -12,14 +12,25 @@ export interface User {
 export interface CurrentWeather {
   aqi: number;
   description: string;
+  icon: WeatherIcon | null;
   label: string;
   sunrise: number;
   sunset: number;
+  timezoneOffset: number;
   temp: number;
   tempFeelsLike: number;
   windGust: number | null;
   windSpeed: number;
 }
+
+export type WeatherIcon =
+  | "thunderstorm"
+  | "drizzle"
+  | "rain"
+  | "snow"
+  | "atmo"
+  | "clear"
+  | "clouds";
 
 export interface Tempurature {
   morning: number;

@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions";
 import axios from "axios";
 import { OwmClient } from "@curium.rocks/openweathermap-client";
-import { CurrentWeather } from "./types";
+import { CurrentWeather, WeatherIcon } from "./types";
 
 const client = new OwmClient(axios);
 
@@ -24,9 +24,11 @@ export async function getCurrentWeather(
   const result: CurrentWeather = {
     aqi,
     description: details?.description,
+    icon: icon(details.id),
     label: details?.main,
     sunrise: sunrise,
     sunset: sunset,
+    timezoneOffset: weather.timezone_offset,
     temp: temp,
     tempFeelsLike: feels_like,
     windGust: (weather.current as any).wind_gust ?? null, // what I get for not making my own damned types
@@ -46,4 +48,24 @@ async function getAqi(latitude: number, longitude: number): Promise<number> {
   });
 
   return resp.data.data.current.pollution.aqius;
+}
+
+function icon(id: number): WeatherIcon | null {
+  if (id >= 200 && id <= 299) {
+    return "thunderstorm";
+  } else if (id >= 300 && id <= 399) {
+    return "drizzle";
+  } else if (id >= 500 && id <= 599) {
+    return "rain";
+  } else if (id >= 600 && id <= 699) {
+    return "snow";
+  } else if (id >= 700 && id <= 799) {
+    return "atmo";
+  } else if (id === 800) {
+    return "clear";
+  } else if (id >= 801 && id <= 899) {
+    return "clouds";
+  }
+
+  return null;
 }

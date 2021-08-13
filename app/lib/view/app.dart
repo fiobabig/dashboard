@@ -1,4 +1,5 @@
 import 'package:dashboard/provider/firebase.dart';
+import 'package:dashboard/weather/weather.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -21,13 +22,22 @@ class App extends HookConsumerWidget {
     }
 
     return MaterialApp(
-      home: Column(
-        children: [
-          if (user != null) ...[
-            SelectableText(user.uid),
-            SelectableText(user.name),
-          ]
-        ],
+      theme: ThemeData(
+        brightness: Brightness.dark,
+      ),
+      home: Scaffold(
+        body: Column(
+          children: [
+            if (user != null) ...[
+              SelectableText(user.uid),
+              SelectableText(user.name),
+              const SizedBox(
+                height: 20.0,
+              ),
+              const CurrentWeather()
+            ]
+          ],
+        ),
       ),
     );
   }
