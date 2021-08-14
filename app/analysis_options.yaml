@@ -7,3 +7,5 @@ linter:
 analyzer:
   errors:
     top_level_function_literal_block: ignore
+  exclude:
+    - "lib/dashboard_icons.dart"

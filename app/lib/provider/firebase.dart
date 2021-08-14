@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'types.dart';
+
+final _auth = firebase.FirebaseAuth.instance;
+final _db = FirebaseFirestore.instance;
 
 final _authStateProvider = StreamProvider((ref) {
-  return FirebaseAuth.instance.authStateChanges();
+  return _auth.authStateChanges();
 });
 
 final _userDocProvider = StreamProvider((ref) {
@@ -15,14 +18,16 @@ final _userDocProvider = StreamProvider((ref) {
   }
 
   final uid = authState.data!.value!.uid;
-  final doc = FirebaseFirestore.instance.doc('users/$uid');
+  final doc = _db.doc('users/$uid');
 
   return doc.snapshots().map<User>(
-        (a) => User.fromMap(
-          uid: uid,
-          data: a.data()!,
-        ),
+    (a) {
+      return User.fromMap(
+        uid: uid,
+        data: a.data()!,
       );
+    },
+  );
 });
 
 final userProvider = StateNotifierProvider<UserNotifier, User?>((ref) {
@@ -31,40 +36,24 @@ final userProvider = StateNotifierProvider<UserNotifier, User?>((ref) {
   return UserNotifier(userDoc.data?.value);
 });
 
-@immutable
-class User {
-  // ignore: prefer_const_constructors_in_immutables
-  User({required this.uid, required this.name});
-
-  User.fromMap({
-    required this.uid,
-    required Map<String, dynamic> data,
-  }) {
-    name = data['name'];
-  }
-
-  late final String uid;
-  late final String name;
-}
-
 class UserNotifier extends StateNotifier<User?> {
   UserNotifier(User? user) : super(user);
 
   void signInAnonymously() {
-    FirebaseAuth.instance.signInAnonymously();
+    _auth.signInAnonymously();
   }
 
   void signInWithEmailAndPassword(
     String email,
     String password,
   ) {
-    FirebaseAuth.instance.signInWithEmailAndPassword(
+    _auth.signInWithEmailAndPassword(
       email: email,
       password: password,
     );
   }
 
   void signOut() {
-    FirebaseAuth.instance.signOut();
+    _auth.signOut();
   }
 }
