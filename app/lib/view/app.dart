@@ -1,4 +1,6 @@
+import 'package:dashboard/date/view/date_display.dart';
 import 'package:dashboard/provider/firebase.dart';
+import 'package:dashboard/time/view/time_display.dart';
 import 'package:dashboard/weather/weather.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -28,13 +30,15 @@ class App extends HookConsumerWidget {
       home: Scaffold(
         body: Column(
           children: [
+            const DateDisplay(),
+            const TimeDisplay(),
             if (user != null) ...[
               SelectableText(user.uid),
               SelectableText(user.name),
               const SizedBox(
                 height: 20.0,
               ),
-              const CurrentWeather()
+              const CurrentWeather(),
             ]
           ],
         ),
