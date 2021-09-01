@@ -1,6 +1,6 @@
-import 'package:dashboard/date/view/date_display.dart';
+import 'package:dashboard/date/date.dart';
 import 'package:dashboard/provider/firebase.dart';
-import 'package:dashboard/time/view/time_display.dart';
+import 'package:dashboard/time/time.dart';
 import 'package:dashboard/weather/weather.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';

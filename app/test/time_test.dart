@@ -5,14 +5,17 @@ import 'package:dashboard/time/view/time_display.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 void main() {
-  group('Date', () {
+  group('Time', () {
     testWidgets('shows the correct time', (
       WidgetTester tester,
     ) async {
       final widget = ProviderScope(
         overrides: [
           dateTimeProvider.overrideWithProvider(
-              Provider((ref) => DateTime.parse('2020-01-01 12:34:56')))
+            Provider(
+              (ref) => DateTime.parse('2020-01-01 12:34:56'),
+            ),
+          )
         ],
         child: const Directionality(
           textDirection: TextDirection.ltr,
