@@ -12,7 +12,10 @@ void main() {
       final widget = ProviderScope(
         overrides: [
           dateTimeProvider.overrideWithProvider(
-              Provider((ref) => DateTime.parse('2016-11-13 00:00:00')))
+            Provider(
+              (ref) => DateTime.parse('2016-11-13 00:00:00'),
+            ),
+          )
         ],
         child: const Directionality(
           textDirection: TextDirection.ltr,
