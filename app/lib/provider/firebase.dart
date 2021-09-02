@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dashboard/provider/model/user.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'types.dart';
+import 'model/user.dart';
 
 final _auth = firebase.FirebaseAuth.instance;
 final _db = FirebaseFirestore.instance;
@@ -22,9 +23,9 @@ final _userDocProvider = StreamProvider((ref) {
 
   return doc.snapshots().map<User>(
     (a) {
-      return User.fromMap(
+      return User.fromDoc(
         uid: uid,
-        data: a.data()!,
+        doc: a.data()!,
       );
     },
   );
