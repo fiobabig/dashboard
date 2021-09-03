@@ -1,5 +1,5 @@
 import 'package:dashboard/date/date.dart';
-import 'package:dashboard/provider/firebase.dart';
+import 'package:dashboard/provider/provider.dart';
 import 'package:dashboard/time/time.dart';
 import 'package:dashboard/weather/weather.dart';
 import 'package:flutter/material.dart';

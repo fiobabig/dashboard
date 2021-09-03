@@ -4,12 +4,10 @@ export interface User {
   uid: string;
   name: string;
   location: firestore.GeoPoint;
-  weather: {
-    current: CurrentWeather;
-  };
+  weather: Weather;
 }
 
-export interface CurrentWeather {
+export interface Weather {
   aqi: number;
   description: string;
   icon: WeatherIcon | null;

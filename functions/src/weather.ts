@@ -1,14 +1,14 @@
 import * as functions from "firebase-functions";
 import axios from "axios";
 import { OwmClient } from "@curium.rocks/openweathermap-client";
-import { CurrentWeather, WeatherIcon } from "./types";
+import { Weather, WeatherIcon } from "./types";
 
 const client = new OwmClient(axios);
 
 export async function getCurrentWeather(
   latitude: number,
   longitude: number
-): Promise<CurrentWeather> {
+): Promise<Weather> {
   const weather = await client.onecall.getData({
     appid: functions.config().weather.key,
     lat: latitude,
@@ -21,7 +21,7 @@ export async function getCurrentWeather(
 
   const aqi = await getAqi(latitude, longitude);
 
-  const result: CurrentWeather = {
+  const result: Weather = {
     aqi,
     description: details?.description,
     icon: icon(details.id),
