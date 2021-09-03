@@ -25,7 +25,7 @@ class User with _$User {
       latitude: (doc['location'] as GeoPoint).latitude,
       longitude: (doc['location'] as GeoPoint).longitude,
       weather: Weather.fromDoc(
-        doc: doc['weather']['current'],
+        doc: doc['weather'],
       ),
     );
   }

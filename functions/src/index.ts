@@ -14,16 +14,14 @@ export const updateWeather = functions.https.onRequest(
     for (const doc of data.docs) {
       const location: firestore.GeoPoint = doc.data().location;
 
-      const current = await getCurrentWeather(
+      const weather = await getCurrentWeather(
         location.latitude,
         location.longitude
       );
 
       await db.doc(`users/${doc.id}`).set(
         {
-          weather: {
-            current,
-          },
+          weather,
         },
         { merge: true }
       );
