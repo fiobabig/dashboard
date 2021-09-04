@@ -9,7 +9,7 @@
     "typescript": "^4.2.2"
   },
   "scripts": {
-    "test": "jest",
+    "test": "jest --forceExit",
     "test:watch": "jest --watch --detectOpenHandles"
   }
 }
