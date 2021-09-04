@@ -3,6 +3,8 @@ import 'package:dashboard/provider/model/weather.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
 
+import 'day.dart';
+
 part 'user.freezed.dart';
 
 @freezed
@@ -13,6 +15,7 @@ class User with _$User {
     required double latitude,
     required double longitude,
     required Weather weather,
+    required List<Day> days,
   }) = _User;
 
   factory User.fromDoc({
@@ -27,6 +30,13 @@ class User with _$User {
       weather: Weather.fromDoc(
         doc: doc['weather'],
       ),
+      days: (doc['days'] as List).map(
+        (a) {
+          return Day.fromDoc(
+            doc: a,
+          );
+        },
+      ).toList(),
     );
   }
 }

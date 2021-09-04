@@ -4,37 +4,29 @@ import 'package:flutter/widgets.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
 
-part 'weather.freezed.dart';
+part 'day.freezed.dart';
 
 @freezed
-class Weather with _$Weather {
-  const factory Weather({
-    required int aqi,
-    required String description,
+class Day with _$Day {
+  const factory Day({
+    required DateTime date,
     required IconData icon,
     required String label,
-    required DateTime sunrise,
-    required DateTime sunset,
-    required double temp,
-    required double tempFeelsLike,
-    double? windGust,
-    required double windSpeed,
-  }) = _Weather;
+    required double precipitationChance,
+    required double tempMax,
+    required double tempMin,
+  }) = _Day;
 
-  factory Weather.fromDoc({
+  factory Day.fromDoc({
     required Map<String, dynamic> doc,
   }) {
-    return Weather(
-      aqi: doc['aqi'],
-      description: doc['description'],
+    return Day(
+      date: (doc['date'] as Timestamp).toDate().toUtc(),
       icon: _icon(doc['icon']),
       label: doc['label'],
-      sunrise: (doc['sunrise'] as Timestamp).toDate().toUtc(),
-      sunset: (doc['sunset'] as Timestamp).toDate().toUtc(),
-      temp: doc['temp'],
-      tempFeelsLike: doc['tempFeelsLike'],
-      windGust: doc['windGust'],
-      windSpeed: doc['windSpeed'],
+      precipitationChance: doc['precipitationChance'],
+      tempMax: doc['tempMax'],
+      tempMin: doc['tempMin'],
     );
   }
 

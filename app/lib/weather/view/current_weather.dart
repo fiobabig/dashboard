@@ -8,7 +8,7 @@ class CurrentWeather extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final data = ref.watch(currentWeatherProvider);
+    final data = ref.watch(weatherProvider);
 
     if (data == null) {
       return const SizedBox(); // no idea what we want to actually do here, or if we care
