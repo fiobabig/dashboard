@@ -11,8 +11,5 @@
   "scripts": {
     "test": "jest --detectOpenHandles",
     "test:watch": "jest --watch --detectOpenHandles"
-  },
-  "dependencies": {
-    "xhr2": "^0.2.1"
   }
 }
