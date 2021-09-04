@@ -14,7 +14,7 @@ export const updateWeather = functions.https.onRequest(
     for (const doc of data.docs) {
       const location: firestore.GeoPoint = doc.data().location;
 
-      const weather = await getCurrentWeather(
+      const [weather, days] = await getCurrentWeather(
         location.latitude,
         location.longitude
       );
@@ -22,6 +22,7 @@ export const updateWeather = functions.https.onRequest(
       await db.doc(`users/${doc.id}`).set(
         {
           weather,
+          days,
         },
         { merge: true }
       );

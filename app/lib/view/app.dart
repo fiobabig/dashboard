@@ -1,3 +1,4 @@
+import 'package:dashboard/calendar/calendar.dart';
 import 'package:dashboard/date/date.dart';
 import 'package:dashboard/provider/provider.dart';
 import 'package:dashboard/time/time.dart';
@@ -28,19 +29,23 @@ class App extends HookConsumerWidget {
         brightness: Brightness.dark,
       ),
       home: Scaffold(
-        body: Column(
-          children: [
-            const DateDisplay(),
-            const TimeDisplay(),
-            if (user != null) ...[
-              SelectableText(user.uid),
-              SelectableText(user.name),
-              const SizedBox(
-                height: 20.0,
-              ),
-              const CurrentWeather(),
-            ]
-          ],
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              const DateDisplay(),
+              const TimeDisplay(),
+              if (user != null) ...[
+                SelectableText(user.uid),
+                SelectableText(user.name),
+                const SizedBox(
+                  height: 20.0,
+                ),
+                const CurrentWeather(),
+                Text(user.days[0].date.toString()),
+                const CalendarWeek(),
+              ]
+            ],
+          ),
         ),
       ),
     );

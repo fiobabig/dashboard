@@ -12,13 +12,21 @@ export interface Weather {
   description: string;
   icon: WeatherIcon | null;
   label: string;
-  sunrise: number;
-  sunset: number;
-  timezoneOffset: number;
+  sunrise: firestore.Timestamp;
+  sunset: firestore.Timestamp;
   temp: number;
   tempFeelsLike: number;
   windGust: number | null;
   windSpeed: number;
+}
+
+export interface Day {
+  date: firestore.Timestamp;
+  icon: WeatherIcon | null;
+  label: string;
+  precipitationChance: number;
+  tempMax: number;
+  tempMin: number;
 }
 
 export type WeatherIcon =
