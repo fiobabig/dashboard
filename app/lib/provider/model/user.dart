@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dashboard/provider/model/photo.dart';
 import 'package:dashboard/provider/model/weather.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
@@ -16,6 +17,7 @@ class User with _$User {
     required double longitude,
     required Weather weather,
     required List<Day> days,
+    required List<Photo> photos,
   }) = _User;
 
   factory User.fromDoc({
@@ -37,6 +39,13 @@ class User with _$User {
           );
         },
       ).toList(),
+      photos: Map<String, dynamic>.from(doc['photos'])
+          .entries
+          .toList()
+          .map(
+            (a) => Photo(url: a.key),
+          )
+          .toList(),
     );
   }
 }
