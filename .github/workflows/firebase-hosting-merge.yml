@@ -38,6 +38,6 @@ jobs:
           FIREBASE_CLI_PREVIEWS: hostingchannels
       - uses: w9jds/firebase-action@master
         with:
-          args: deploy --only firestore:rules
+          args: deploy --only firestore:rules,storage
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
