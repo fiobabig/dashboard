@@ -16,8 +16,7 @@ class GalleryDisplay extends HookConsumerWidget {
     return Column(
       children: photos
           .map(
-            (e) => Image.network(
-                'https://firebasestorage.googleapis.com/v0/b/fiobabig-dashboard.appspot.com/o/favicon.png?alt=media&token=be520170-e491-4416-b3ec-6633254c13cf'),
+            (e) => Image.network(e.url),
           )
           .toList(),
     );
