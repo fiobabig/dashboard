@@ -2,6 +2,10 @@ import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import { getCurrentWeather } from "./weather";
 import { firestore } from "firebase-admin";
+import express = require("express");
+import { validateFirebaseIdToken } from "./middleware";
+
+const app = express();
 
 admin.initializeApp();
 
@@ -31,3 +35,5 @@ export const updateWeather = functions.https.onRequest(
     response.send("Done");
   }
 );
+
+app.use(validateFirebaseIdToken);
