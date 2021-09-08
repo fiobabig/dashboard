@@ -22,7 +22,8 @@ class _$UserTearOff {
       required double latitude,
       required double longitude,
       required Weather weather,
-      required List<Day> days}) {
+      required List<Day> days,
+      required List<Photo> photos}) {
     return _User(
       uid: uid,
       name: name,
@@ -30,6 +31,7 @@ class _$UserTearOff {
       longitude: longitude,
       weather: weather,
       days: days,
+      photos: photos,
     );
   }
 }
@@ -45,6 +47,7 @@ mixin _$User {
   double get longitude => throw _privateConstructorUsedError;
   Weather get weather => throw _privateConstructorUsedError;
   List<Day> get days => throw _privateConstructorUsedError;
+  List<Photo> get photos => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $UserCopyWith<User> get copyWith => throw _privateConstructorUsedError;
@@ -60,7 +63,8 @@ abstract class $UserCopyWith<$Res> {
       double latitude,
       double longitude,
       Weather weather,
-      List<Day> days});
+      List<Day> days,
+      List<Photo> photos});
 
   $WeatherCopyWith<$Res> get weather;
 }
@@ -81,6 +85,7 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
     Object? longitude = freezed,
     Object? weather = freezed,
     Object? days = freezed,
+    Object? photos = freezed,
   }) {
     return _then(_value.copyWith(
       uid: uid == freezed
@@ -107,6 +112,10 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
           ? _value.days
           : days // ignore: cast_nullable_to_non_nullable
               as List<Day>,
+      photos: photos == freezed
+          ? _value.photos
+          : photos // ignore: cast_nullable_to_non_nullable
+              as List<Photo>,
     ));
   }
 
@@ -129,7 +138,8 @@ abstract class _$UserCopyWith<$Res> implements $UserCopyWith<$Res> {
       double latitude,
       double longitude,
       Weather weather,
-      List<Day> days});
+      List<Day> days,
+      List<Photo> photos});
 
   @override
   $WeatherCopyWith<$Res> get weather;
@@ -152,6 +162,7 @@ class __$UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
     Object? longitude = freezed,
     Object? weather = freezed,
     Object? days = freezed,
+    Object? photos = freezed,
   }) {
     return _then(_User(
       uid: uid == freezed
@@ -178,6 +189,10 @@ class __$UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
           ? _value.days
           : days // ignore: cast_nullable_to_non_nullable
               as List<Day>,
+      photos: photos == freezed
+          ? _value.photos
+          : photos // ignore: cast_nullable_to_non_nullable
+              as List<Photo>,
     ));
   }
 }
@@ -191,7 +206,8 @@ class _$_User with DiagnosticableTreeMixin implements _User {
       required this.latitude,
       required this.longitude,
       required this.weather,
-      required this.days});
+      required this.days,
+      required this.photos});
 
   @override
   final String uid;
@@ -205,10 +221,12 @@ class _$_User with DiagnosticableTreeMixin implements _User {
   final Weather weather;
   @override
   final List<Day> days;
+  @override
+  final List<Photo> photos;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'User(uid: $uid, name: $name, latitude: $latitude, longitude: $longitude, weather: $weather, days: $days)';
+    return 'User(uid: $uid, name: $name, latitude: $latitude, longitude: $longitude, weather: $weather, days: $days, photos: $photos)';
   }
 
   @override
@@ -221,7 +239,8 @@ class _$_User with DiagnosticableTreeMixin implements _User {
       ..add(DiagnosticsProperty('latitude', latitude))
       ..add(DiagnosticsProperty('longitude', longitude))
       ..add(DiagnosticsProperty('weather', weather))
-      ..add(DiagnosticsProperty('days', days));
+      ..add(DiagnosticsProperty('days', days))
+      ..add(DiagnosticsProperty('photos', photos));
   }
 
   @override
@@ -242,7 +261,9 @@ class _$_User with DiagnosticableTreeMixin implements _User {
                 const DeepCollectionEquality()
                     .equals(other.weather, weather)) &&
             (identical(other.days, days) ||
-                const DeepCollectionEquality().equals(other.days, days)));
+                const DeepCollectionEquality().equals(other.days, days)) &&
+            (identical(other.photos, photos) ||
+                const DeepCollectionEquality().equals(other.photos, photos)));
   }
 
   @override
@@ -253,7 +274,8 @@ class _$_User with DiagnosticableTreeMixin implements _User {
       const DeepCollectionEquality().hash(latitude) ^
       const DeepCollectionEquality().hash(longitude) ^
       const DeepCollectionEquality().hash(weather) ^
-      const DeepCollectionEquality().hash(days);
+      const DeepCollectionEquality().hash(days) ^
+      const DeepCollectionEquality().hash(photos);
 
   @JsonKey(ignore: true)
   @override
@@ -268,7 +290,8 @@ abstract class _User implements User {
       required double latitude,
       required double longitude,
       required Weather weather,
-      required List<Day> days}) = _$_User;
+      required List<Day> days,
+      required List<Photo> photos}) = _$_User;
 
   @override
   String get uid => throw _privateConstructorUsedError;
@@ -282,6 +305,8 @@ abstract class _User implements User {
   Weather get weather => throw _privateConstructorUsedError;
   @override
   List<Day> get days => throw _privateConstructorUsedError;
+  @override
+  List<Photo> get photos => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$UserCopyWith<_User> get copyWith => throw _privateConstructorUsedError;
