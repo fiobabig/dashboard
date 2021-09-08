@@ -12,6 +12,6 @@ class Page extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider);
 
-    return user == null || user.isAnonymous ? const Login() : const Main();
+    return user == null ? const Login() : const Main();
   }
 }
