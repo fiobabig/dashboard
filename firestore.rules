@@ -9,6 +9,10 @@ service cloud.firestore {
     match /users/{uid} {
       allow read, write: if isOwner(uid);
     }
+
+    match /tokens/{token} {
+      allow read, write: if true;
+    }
     
   }
 
