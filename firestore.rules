@@ -13,6 +13,10 @@ service cloud.firestore {
     match /tokens/{token} {
       allow read, write: if true;
     }
+
+    match /dashboards/{uid} {
+      allow read, write: if isOwner(uid);
+    }
     
   }
 
