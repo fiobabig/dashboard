@@ -1,4 +1,4 @@
-import 'package:dashboard/provider/user.dart';
+import 'package:dashboard/provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -10,8 +10,8 @@ class Page extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(userProvider);
+    final dashboard = ref.watch(dashboardProvider);
 
-    return user == null ? const Login() : const Main();
+    return dashboard?.ownerUid == null ? const Login() : const Main();
   }
 }

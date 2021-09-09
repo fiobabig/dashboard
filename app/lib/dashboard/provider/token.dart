@@ -8,9 +8,9 @@ final _random = Random.secure();
 final _db = FirebaseFirestore.instance;
 
 final _tokenGenerateProvider = FutureProvider<String>((ref) async {
-  final user = ref.watch(userProvider);
+  final dashboard = ref.watch(dashboardProvider);
 
-  if (user != null) {
+  if (dashboard == null) {
     return '';
   }
 
@@ -18,6 +18,7 @@ final _tokenGenerateProvider = FutureProvider<String>((ref) async {
 
   await _db.doc('tokens/$token').set({
     'createdAt': FieldValue.serverTimestamp(),
+    'dashboardUid': dashboard.uid
   });
 
   return token;

@@ -2,29 +2,27 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dashboard/provider/model/user.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'auth_state.dart';
 import 'model/user.dart';
 
 final _auth = firebase.FirebaseAuth.instance;
 final _db = FirebaseFirestore.instance;
 
-final _authStateProvider = StreamProvider((ref) {
-  return _auth.authStateChanges();
-});
-
 final _userDocProvider = StreamProvider((ref) {
-  final authState = ref.watch(_authStateProvider);
+  final authState = ref.watch(authStateProvider);
 
-  if (authState.data?.value == null) {
+  final user = authState.data?.value;
+
+  if (user == null || user.isAnonymous) {
     return const Stream<User>.empty();
   }
 
-  final uid = authState.data!.value!.uid;
-  final doc = _db.doc('users/$uid');
+  final doc = _db.doc('users/${user.uid}');
 
   return doc.snapshots().map<User>(
     (a) {
       return User.fromDoc(
-        uid: uid,
+        uid: user.uid,
         doc: a.data()!,
       );
     },
@@ -39,10 +37,6 @@ final userProvider = StateNotifierProvider<UserNotifier, User?>((ref) {
 
 class UserNotifier extends StateNotifier<User?> {
   UserNotifier(User? user) : super(user);
-
-  void signInAnonymously() {
-    _auth.signInAnonymously();
-  }
 
   void signInWithEmailAndPassword(
     String email,
