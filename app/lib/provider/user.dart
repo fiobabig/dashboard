@@ -48,6 +48,10 @@ class UserNotifier extends StateNotifier<User?> {
     );
   }
 
+  void signInWithGoogle() {
+    _auth.signInWithPopup(firebase.GoogleAuthProvider());
+  }
+
   void signOut() {
     _auth.signOut();
   }

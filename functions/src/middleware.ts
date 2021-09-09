@@ -1,7 +1,6 @@
 import * as express from "express";
 import functions = require("firebase-functions");
 import admin = require("firebase-admin");
-admin.initializeApp();
 
 declare global {
   namespace Express {

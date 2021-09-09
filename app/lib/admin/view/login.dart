@@ -1,3 +1,4 @@
+import 'package:dashboard/provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -7,6 +8,12 @@ class Login extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return const Scaffold(body: Text('admin login'));
+    return Scaffold(
+        body: ElevatedButton(
+      child: const Text('login with google'),
+      onPressed: () {
+        ref.read(userProvider.notifier).signInWithGoogle();
+      },
+    ));
   }
 }
