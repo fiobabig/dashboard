@@ -1,12 +1,37 @@
 import * as functions from "firebase-functions";
+import * as admin from "firebase-admin";
 import axios from "axios";
 import { OwmClient } from "@curium.rocks/openweathermap-client";
 import { Day, Weather, WeatherIcon } from "./types";
 import { firestore } from "firebase-admin";
 
 const client = new OwmClient(axios);
+const db = admin.firestore();
 
-export async function getCurrentWeather(
+export const update = functions.https.onRequest(async (request, response) => {
+  const data = await db.collection("users").orderBy("location").get();
+
+  for (const doc of data.docs) {
+    const location: firestore.GeoPoint = doc.data().location;
+
+    const [weather, days] = await getCurrentWeather(
+      location.latitude,
+      location.longitude
+    );
+
+    await db.doc(`users/${doc.id}`).set(
+      {
+        weather,
+        days,
+      },
+      { merge: true }
+    );
+  }
+
+  response.send("Done");
+});
+
+async function getCurrentWeather(
   latitude: number,
   longitude: number
 ): Promise<[Weather, Day[]]> {
@@ -16,10 +41,12 @@ export async function getCurrentWeather(
     lon: longitude,
     units: "imperial",
   });
-  
-  const days = data.daily.map<Day>( a => {
+
+  const days = data.daily.map<Day>((a) => {
     return {
-      date: firestore.Timestamp.fromMillis((a.dt + data.timezone_offset) * 1000),
+      date: firestore.Timestamp.fromMillis(
+        (a.dt + data.timezone_offset) * 1000
+      ),
       icon: icon(a.weather?.[0].id),
       label: a.weather?.[0].main,
       precipitationChance: a.pop,
@@ -27,7 +54,7 @@ export async function getCurrentWeather(
       tempMin: a.temp.min,
     };
   });
-  
+
   const aqi = await getAqi(latitude, longitude);
   const { sunset, sunrise, temp, feels_like, wind_speed } = data.current;
   const details = data.current.weather?.[0];
@@ -37,8 +64,12 @@ export async function getCurrentWeather(
     description: details?.description,
     icon: icon(details.id),
     label: details?.main,
-    sunrise: firestore.Timestamp.fromMillis((sunrise + data.timezone_offset) * 1000),
-    sunset: firestore.Timestamp.fromMillis((sunset + data.timezone_offset) * 1000),
+    sunrise: firestore.Timestamp.fromMillis(
+      (sunrise + data.timezone_offset) * 1000
+    ),
+    sunset: firestore.Timestamp.fromMillis(
+      (sunset + data.timezone_offset) * 1000
+    ),
     temp: temp,
     tempFeelsLike: feels_like,
     windGust: (data.current as any).wind_gust ?? null, // what I get for not making my own damned types
