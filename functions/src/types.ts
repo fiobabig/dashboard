@@ -46,3 +46,8 @@ export interface Tempurature {
   min: number;
   max: number;
 }
+
+export interface Token {
+  dashboardUid: string;
+  ownerUid: string;
+}

@@ -18,7 +18,7 @@ final _tokenGenerateProvider = FutureProvider<String>((ref) async {
 
   await _db.doc('tokens/$token').set({
     'createdAt': FieldValue.serverTimestamp(),
-    'dashboardUid': dashboard.uid
+    'dashboardUid': dashboard.uid,
   });
 
   return token;
