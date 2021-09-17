@@ -56,8 +56,8 @@ service cloud.firestore {
     let isOwner = isOwner(incoming.ownerUid);   
     let hasRequiredFields = incoming.keys()
       .hasAll(["ownerUid"]);
-    let hasOnlyFields = incoming.keys()
-      .hasOnly(["ownerUid"]);
+    let hasOnlyFields = incoming.diff(resource.data).affectedKeys()
+      .hasOnly(["ownerUid"]); 
 
     return 
       isOwner &&

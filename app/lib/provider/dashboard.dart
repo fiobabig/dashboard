@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dashboard/provider/model/dashboard.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase;
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'auth_state.dart';
 
 final _auth = firebase.FirebaseAuth.instance;
