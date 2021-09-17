@@ -9,7 +9,10 @@
     "typescript": "^4.2.2"
   },
   "scripts": {
-    "test": "jest --forceExit",
+    "test": "jest --forceExit --detectOpenHandles",
     "test:watch": "jest --watch --detectOpenHandles"
+  },
+  "dependencies": {
+    "uuid": "^8.3.2"
   }
 }

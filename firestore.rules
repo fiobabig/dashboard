@@ -7,11 +7,16 @@ service cloud.firestore {
     }
 
     match /users/{uid} {
-      allow read, write: if isOwner(uid);
+      allow read: if isOwner(uid) || (request.auth.uid in resource.data.dashboards); 
+      allow write: if isOwner(uid);
     }
 
     match /tokens/{token} {
-      allow read, write: if true;
+      allow read: if isSignedIn();
+
+      allow create: if isValidTokenCreate();
+
+      allow update: if isValidTokenUpdate();
     }
 
     match /dashboards/{uid} {
@@ -26,5 +31,37 @@ service cloud.firestore {
 
   function isOwner(uid) {
     return isSignedIn() && request.auth.uid == uid;
+  }
+
+  function isValidTokenCreate() {
+    let incoming = request.resource.data;
+
+    let isOwner = isOwner(incoming.dashboardUid); 
+    let isNow = request.time == incoming.createdAt;
+    let hasRequiredFields = incoming.keys()
+      .hasAll(["createdAt", "dashboardUid"]);
+    let hasOnlyFields = incoming.keys()
+      .hasOnly(["createdAt", "dashboardUid"]);
+
+    return 
+      isOwner &&
+      isNow &&
+      hasRequiredFields &&
+      hasOnlyFields;
+  }
+
+  function isValidTokenUpdate() {    
+    let incoming = request.resource.data;
+
+    let isOwner = isOwner(incoming.ownerUid);   
+    let hasRequiredFields = incoming.keys()
+      .hasAll(["ownerUid"]);
+    let hasOnlyFields = incoming.keys()
+      .hasOnly(["ownerUid"]);
+
+    return 
+      isOwner &&
+      hasRequiredFields &&
+      hasOnlyFields;
   }
 }
