@@ -6,6 +6,7 @@ name: Deploy to Firebase Hosting on merge
   push:
     branches:
       - main
+  workflow_dispatch:
 
 defaults:
   run:
@@ -38,6 +39,6 @@ jobs:
           FIREBASE_CLI_PREVIEWS: hostingchannels
       - uses: w9jds/firebase-action@master
         with:
-          args: deploy --only firestore:rules,storage
+          args: deploy --only functions,firestore:rules,storage
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
