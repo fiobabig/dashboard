@@ -1,5 +1,5 @@
-import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
+import * as functions from "firebase-functions";
 import { Token } from "./types";
 
 const db = admin.firestore();
@@ -28,7 +28,7 @@ export const onUpdate = functions.firestore
     batch.set(
       dashboardRef,
       {
-        ownerId: token.ownerUid,
+        ownerUid: token.ownerUid,
       },
       { merge: true }
     );

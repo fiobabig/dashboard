@@ -80,5 +80,3 @@ class UserNotifier extends StateNotifier<User?> {
     );
   }
 }
-// TODO: Deploy function in the pipeline
-// then token should update other tables once you add a token

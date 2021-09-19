@@ -1,7 +1,7 @@
 import 'package:dashboard/calendar/calendar.dart';
 import 'package:dashboard/date/date.dart';
 import 'package:dashboard/gallery/gallery.dart';
-import 'package:dashboard/provider/user.dart';
+import 'package:dashboard/provider/dashboard.dart';
 import 'package:dashboard/time/time.dart';
 import 'package:dashboard/weather/weather.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +12,7 @@ class Main extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(userProvider)!;
+    final user = ref.watch(dashboardUserProvider)!;
 
     return Scaffold(
       body: SingleChildScrollView(

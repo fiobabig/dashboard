@@ -10,8 +10,8 @@ class Page extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final dashboard = ref.watch(dashboardProvider);
+    final user = ref.watch(dashboardUserProvider);
 
-    return dashboard?.ownerUid == null ? const Login() : const Main();
+    return user == null ? const Login() : const Main();
   }
 }

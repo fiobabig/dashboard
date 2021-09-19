@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart' as firebase;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'auth_state.dart';
+import 'model/user.dart';
 
 final _auth = firebase.FirebaseAuth.instance;
 final _db = FirebaseFirestore.instance;
@@ -28,7 +29,7 @@ final _docProvider = StreamProvider((ref) {
     (a) {
       return Dashboard(
         uid: user.uid,
-        ownerUid: null,
+        ownerUid: a.data()?['ownerUid'],
       );
     },
   );
@@ -39,6 +40,36 @@ final dashboardProvider =
   final doc = ref.watch(_docProvider);
 
   return DashboardNotifier(doc.data?.value);
+});
+
+final _userDocProvider = StreamProvider<User?>((ref) {
+  final doc = ref.watch(_docProvider);
+  final ownerUid = doc.data?.value.ownerUid;
+
+  if (ownerUid == null) {
+    return const Stream<User>.empty();
+  }
+
+  final userDoc = _db.doc('users/$ownerUid');
+
+  return userDoc.snapshots().map<User?>(
+    (a) {
+      if (a.data() == null) {
+        return null;
+      }
+
+      return User.fromDoc(
+        uid: a.id,
+        doc: a.data()!,
+      );
+    },
+  );
+});
+
+final dashboardUserProvider = Provider<User?>((ref) {
+  final doc = ref.watch(_userDocProvider);
+
+  return doc.data?.value;
 });
 
 class DashboardNotifier extends StateNotifier<Dashboard?> {
