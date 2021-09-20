@@ -19,19 +19,11 @@ class _$UserTearOff {
   _User call(
       {required String uid,
       required String name,
-      required double latitude,
-      required double longitude,
-      required Weather weather,
-      required List<Day> days,
-      required List<Photo> photos}) {
+      required Map<String, dynamic> dashboards}) {
     return _User(
       uid: uid,
       name: name,
-      latitude: latitude,
-      longitude: longitude,
-      weather: weather,
-      days: days,
-      photos: photos,
+      dashboards: dashboards,
     );
   }
 }
@@ -43,11 +35,7 @@ const $User = _$UserTearOff();
 mixin _$User {
   String get uid => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
-  double get latitude => throw _privateConstructorUsedError;
-  double get longitude => throw _privateConstructorUsedError;
-  Weather get weather => throw _privateConstructorUsedError;
-  List<Day> get days => throw _privateConstructorUsedError;
-  List<Photo> get photos => throw _privateConstructorUsedError;
+  Map<String, dynamic> get dashboards => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $UserCopyWith<User> get copyWith => throw _privateConstructorUsedError;
@@ -57,16 +45,7 @@ mixin _$User {
 abstract class $UserCopyWith<$Res> {
   factory $UserCopyWith(User value, $Res Function(User) then) =
       _$UserCopyWithImpl<$Res>;
-  $Res call(
-      {String uid,
-      String name,
-      double latitude,
-      double longitude,
-      Weather weather,
-      List<Day> days,
-      List<Photo> photos});
-
-  $WeatherCopyWith<$Res> get weather;
+  $Res call({String uid, String name, Map<String, dynamic> dashboards});
 }
 
 /// @nodoc
@@ -81,11 +60,7 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
   $Res call({
     Object? uid = freezed,
     Object? name = freezed,
-    Object? latitude = freezed,
-    Object? longitude = freezed,
-    Object? weather = freezed,
-    Object? days = freezed,
-    Object? photos = freezed,
+    Object? dashboards = freezed,
   }) {
     return _then(_value.copyWith(
       uid: uid == freezed
@@ -96,34 +71,11 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      latitude: latitude == freezed
-          ? _value.latitude
-          : latitude // ignore: cast_nullable_to_non_nullable
-              as double,
-      longitude: longitude == freezed
-          ? _value.longitude
-          : longitude // ignore: cast_nullable_to_non_nullable
-              as double,
-      weather: weather == freezed
-          ? _value.weather
-          : weather // ignore: cast_nullable_to_non_nullable
-              as Weather,
-      days: days == freezed
-          ? _value.days
-          : days // ignore: cast_nullable_to_non_nullable
-              as List<Day>,
-      photos: photos == freezed
-          ? _value.photos
-          : photos // ignore: cast_nullable_to_non_nullable
-              as List<Photo>,
+      dashboards: dashboards == freezed
+          ? _value.dashboards
+          : dashboards // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>,
     ));
-  }
-
-  @override
-  $WeatherCopyWith<$Res> get weather {
-    return $WeatherCopyWith<$Res>(_value.weather, (value) {
-      return _then(_value.copyWith(weather: value));
-    });
   }
 }
 
@@ -132,17 +84,7 @@ abstract class _$UserCopyWith<$Res> implements $UserCopyWith<$Res> {
   factory _$UserCopyWith(_User value, $Res Function(_User) then) =
       __$UserCopyWithImpl<$Res>;
   @override
-  $Res call(
-      {String uid,
-      String name,
-      double latitude,
-      double longitude,
-      Weather weather,
-      List<Day> days,
-      List<Photo> photos});
-
-  @override
-  $WeatherCopyWith<$Res> get weather;
+  $Res call({String uid, String name, Map<String, dynamic> dashboards});
 }
 
 /// @nodoc
@@ -158,11 +100,7 @@ class __$UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
   $Res call({
     Object? uid = freezed,
     Object? name = freezed,
-    Object? latitude = freezed,
-    Object? longitude = freezed,
-    Object? weather = freezed,
-    Object? days = freezed,
-    Object? photos = freezed,
+    Object? dashboards = freezed,
   }) {
     return _then(_User(
       uid: uid == freezed
@@ -173,26 +111,10 @@ class __$UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      latitude: latitude == freezed
-          ? _value.latitude
-          : latitude // ignore: cast_nullable_to_non_nullable
-              as double,
-      longitude: longitude == freezed
-          ? _value.longitude
-          : longitude // ignore: cast_nullable_to_non_nullable
-              as double,
-      weather: weather == freezed
-          ? _value.weather
-          : weather // ignore: cast_nullable_to_non_nullable
-              as Weather,
-      days: days == freezed
-          ? _value.days
-          : days // ignore: cast_nullable_to_non_nullable
-              as List<Day>,
-      photos: photos == freezed
-          ? _value.photos
-          : photos // ignore: cast_nullable_to_non_nullable
-              as List<Photo>,
+      dashboards: dashboards == freezed
+          ? _value.dashboards
+          : dashboards // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>,
     ));
   }
 }
@@ -201,32 +123,18 @@ class __$UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
 
 class _$_User with DiagnosticableTreeMixin implements _User {
   const _$_User(
-      {required this.uid,
-      required this.name,
-      required this.latitude,
-      required this.longitude,
-      required this.weather,
-      required this.days,
-      required this.photos});
+      {required this.uid, required this.name, required this.dashboards});
 
   @override
   final String uid;
   @override
   final String name;
   @override
-  final double latitude;
-  @override
-  final double longitude;
-  @override
-  final Weather weather;
-  @override
-  final List<Day> days;
-  @override
-  final List<Photo> photos;
+  final Map<String, dynamic> dashboards;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'User(uid: $uid, name: $name, latitude: $latitude, longitude: $longitude, weather: $weather, days: $days, photos: $photos)';
+    return 'User(uid: $uid, name: $name, dashboards: $dashboards)';
   }
 
   @override
@@ -236,11 +144,7 @@ class _$_User with DiagnosticableTreeMixin implements _User {
       ..add(DiagnosticsProperty('type', 'User'))
       ..add(DiagnosticsProperty('uid', uid))
       ..add(DiagnosticsProperty('name', name))
-      ..add(DiagnosticsProperty('latitude', latitude))
-      ..add(DiagnosticsProperty('longitude', longitude))
-      ..add(DiagnosticsProperty('weather', weather))
-      ..add(DiagnosticsProperty('days', days))
-      ..add(DiagnosticsProperty('photos', photos));
+      ..add(DiagnosticsProperty('dashboards', dashboards));
   }
 
   @override
@@ -251,19 +155,9 @@ class _$_User with DiagnosticableTreeMixin implements _User {
                 const DeepCollectionEquality().equals(other.uid, uid)) &&
             (identical(other.name, name) ||
                 const DeepCollectionEquality().equals(other.name, name)) &&
-            (identical(other.latitude, latitude) ||
+            (identical(other.dashboards, dashboards) ||
                 const DeepCollectionEquality()
-                    .equals(other.latitude, latitude)) &&
-            (identical(other.longitude, longitude) ||
-                const DeepCollectionEquality()
-                    .equals(other.longitude, longitude)) &&
-            (identical(other.weather, weather) ||
-                const DeepCollectionEquality()
-                    .equals(other.weather, weather)) &&
-            (identical(other.days, days) ||
-                const DeepCollectionEquality().equals(other.days, days)) &&
-            (identical(other.photos, photos) ||
-                const DeepCollectionEquality().equals(other.photos, photos)));
+                    .equals(other.dashboards, dashboards)));
   }
 
   @override
@@ -271,11 +165,7 @@ class _$_User with DiagnosticableTreeMixin implements _User {
       runtimeType.hashCode ^
       const DeepCollectionEquality().hash(uid) ^
       const DeepCollectionEquality().hash(name) ^
-      const DeepCollectionEquality().hash(latitude) ^
-      const DeepCollectionEquality().hash(longitude) ^
-      const DeepCollectionEquality().hash(weather) ^
-      const DeepCollectionEquality().hash(days) ^
-      const DeepCollectionEquality().hash(photos);
+      const DeepCollectionEquality().hash(dashboards);
 
   @JsonKey(ignore: true)
   @override
@@ -287,26 +177,14 @@ abstract class _User implements User {
   const factory _User(
       {required String uid,
       required String name,
-      required double latitude,
-      required double longitude,
-      required Weather weather,
-      required List<Day> days,
-      required List<Photo> photos}) = _$_User;
+      required Map<String, dynamic> dashboards}) = _$_User;
 
   @override
   String get uid => throw _privateConstructorUsedError;
   @override
   String get name => throw _privateConstructorUsedError;
   @override
-  double get latitude => throw _privateConstructorUsedError;
-  @override
-  double get longitude => throw _privateConstructorUsedError;
-  @override
-  Weather get weather => throw _privateConstructorUsedError;
-  @override
-  List<Day> get days => throw _privateConstructorUsedError;
-  @override
-  List<Photo> get photos => throw _privateConstructorUsedError;
+  Map<String, dynamic> get dashboards => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$UserCopyWith<_User> get copyWith => throw _privateConstructorUsedError;

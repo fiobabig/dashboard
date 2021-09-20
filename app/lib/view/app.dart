@@ -13,7 +13,8 @@ class App extends HookConsumerWidget {
         brightness: Brightness.dark,
       ),
       routes: {
-        '/': (context) => const dashboard.Page(),
+        '/': (context) => const Text('pick a page, noober'),
+        '/dashboard': (context) => const dashboard.Page(),
         '/admin': (context) => const admin.Page(),
       },
     );

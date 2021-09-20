@@ -1,4 +1,4 @@
-import 'package:dashboard/provider/user.dart';
+import 'package:dashboard/provider/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -12,6 +12,15 @@ class Page extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider);
 
-    return user == null ? const Login() : const Main();
+    return Scaffold(
+      body: user.when(
+        data: (value) => value == null ? const Login() : const Main(),
+        loading: () => const CircularProgressIndicator(),
+        error: (e, s) {
+          FlutterError.reportError(FlutterErrorDetails(exception: e, stack: s));
+          return ErrorWidget(e);
+        },
+      ),
+    );
   }
 }

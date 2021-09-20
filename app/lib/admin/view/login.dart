@@ -1,4 +1,4 @@
-import 'package:dashboard/provider/provider.dart';
+import 'package:dashboard/provider/user_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
