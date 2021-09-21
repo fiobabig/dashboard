@@ -10,21 +10,73 @@ import 'model/user.dart';
 final _auth = firebase.FirebaseAuth.instance;
 final _db = FirebaseFirestore.instance;
 
+final _userFamily = StreamProvider.family<User?, String>((ref, uid) {
+  return _db.doc('users/$uid').snapshots().map(
+    (snapshot) {
+      if (!snapshot.exists) {
+        return null;
+      }
+
+      return User.fromDoc(
+        uid: snapshot.id,
+        doc: snapshot.data()!,
+      );
+    },
+  );
+});
+
+final _createUserFamily = FutureProvider.family<void, firebase.User>((
+  ref,
+  firebaseUser,
+) async {
+  final doc = _db.doc('users/${firebaseUser.uid}');
+
+  await doc.set(
+    {
+      'name': firebaseUser.displayName,
+      'dashboards': {},
+    },
+    SetOptions(merge: true),
+  );
+});
+
 final userProvider =
     StateNotifierProvider<UserNotifier, AsyncValue<User?>>((ref) {
   final authState = ref.watch(authStateProvider);
 
   return authState.when(
-    data: (user) {
-      if (user == null) {
+    data: (firebaseUser) {
+      if (firebaseUser == null) {
         return UserNotifier.notLoggedIn();
       }
 
-      if (user.isAnonymous == false) {
-        return UserNotifier(user: user);
+      if (firebaseUser.isAnonymous == true) {
+        return UserNotifier.loading();
       }
 
-      return UserNotifier.loading();
+      final userState = ref.watch(_userFamily(firebaseUser.uid));
+
+      return userState.map(
+        data: (user) {
+          if (user.value == null) {
+            return ref
+                .watch(
+                  _createUserFamily(firebaseUser),
+                )
+                .maybeMap(
+                  error: (value) => UserNotifier.error(
+                    value.error,
+                    value.stackTrace,
+                  ),
+                  orElse: () => UserNotifier.loading(),
+                );
+          }
+
+          return UserNotifier(user: user.value!);
+        },
+        loading: (_) => UserNotifier.loading(),
+        error: (value) => UserNotifier.error(value.error, value.stackTrace),
+      );
     },
     loading: () => UserNotifier.loading(),
     error: (e, s) => UserNotifier.error(e, s),
@@ -33,19 +85,12 @@ final userProvider =
 
 class UserNotifier extends StateNotifier<AsyncValue<User?>> {
   UserNotifier({
-    required firebase.User user,
-  }) : super(const AsyncValue.loading()) {
-    _listen(user);
-  }
-
+    required User user,
+  }) : super(AsyncValue.data(user));
   UserNotifier.notLoggedIn() : super(const AsyncValue.data(null));
-
   UserNotifier.loading() : super(const AsyncValue.loading());
-
   UserNotifier.error(Object error, StackTrace? stackTrace)
       : super(AsyncValue.error(error, stackTrace));
-
-  StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? subscription;
 
   void signInWithEmailAndPassword(
     String email,
@@ -71,41 +116,5 @@ class UserNotifier extends StateNotifier<AsyncValue<User?>> {
     await doc.update({
       'ownerUid': state.data!.value!.uid,
     });
-  }
-
-  void _listen(firebase.User user) {
-    final doc = _db.doc('users/${user.uid}');
-
-    subscription = doc.snapshots().listen(
-      (a) async {
-        if (!a.exists) {
-          await doc.set(
-            {
-              'name': user.displayName,
-              'dashboards': {},
-            },
-            SetOptions(merge: true),
-          );
-
-          return;
-        }
-
-        state = AsyncValue.data(
-          User.fromDoc(
-            uid: a.id,
-            doc: a.data()!,
-          ),
-        );
-      },
-      onError: (e, s) {
-        state = AsyncValue.error(e, s);
-      },
-    );
-  }
-
-  @override
-  void dispose() {
-    subscription?.cancel();
-    super.dispose();
   }
 }

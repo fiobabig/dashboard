@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dashboard/provider/auth_state.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase;
@@ -9,6 +7,23 @@ import 'model/dashboard.dart';
 
 final _auth = firebase.FirebaseAuth.instance;
 final _db = FirebaseFirestore.instance;
+
+final _dashboardFamily = StreamProvider.family<Dashboard, String>((ref, id) {
+  return _db.doc('dashboards/$id').snapshots().map(
+    (snapshot) {
+      if (!snapshot.exists) {
+        return Dashboard.withoutData(
+          dashboardUid: snapshot.id,
+        );
+      }
+
+      return Dashboard.fromDoc(
+        dashboardUid: snapshot.id,
+        doc: snapshot.data()!,
+      );
+    },
+  );
+});
 
 final dashboardProvider =
     StateNotifierProvider<DashboardNotifier, AsyncValue<Dashboard>>((ref) {
@@ -21,7 +36,14 @@ final dashboardProvider =
       }
 
       if (user.isAnonymous == true) {
-        return DashboardNotifier(dashboardUid: user.uid);
+        final dashboardState = ref.watch(_dashboardFamily(user.uid));
+
+        return dashboardState.map(
+          data: (value) => DashboardNotifier(value),
+          loading: (_) => DashboardNotifier.loading(),
+          error: (value) =>
+              DashboardNotifier.error(value.error, value.stackTrace),
+        );
       }
 
       return DashboardNotifier.loading();
@@ -32,54 +54,12 @@ final dashboardProvider =
 });
 
 class DashboardNotifier extends StateNotifier<AsyncValue<Dashboard>> {
-  DashboardNotifier({
-    required String dashboardUid,
-  }) : super(const AsyncValue.loading()) {
-    _listen(dashboardUid);
-  }
-
+  DashboardNotifier(AsyncValue<Dashboard> state) : super(state);
   DashboardNotifier.loading() : super(const AsyncValue.loading());
-
-  DashboardNotifier.error(Object error, StackTrace? stackTrace)
-      : super(AsyncValue.error(error, stackTrace));
-
-  StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? subscription;
+  DashboardNotifier.error(Object exception, StackTrace? stackTrace)
+      : super(AsyncValue.error(exception, stackTrace));
 
   void signInAnonymously() {
     _auth.signInAnonymously();
-  }
-
-  void _listen(String dashboardUid) {
-    final doc = _db.doc('dashboards/$dashboardUid');
-
-    subscription = doc.snapshots().listen(
-      (a) {
-        if (!a.exists) {
-          state = AsyncValue.data(
-            Dashboard.withoutData(
-              dashboardUid: a.id,
-            ),
-          );
-
-          return;
-        }
-
-        state = AsyncValue.data(
-          Dashboard.fromDoc(
-            dashboardUid: a.id,
-            doc: a.data()!,
-          ),
-        );
-      },
-      onError: (e, s) {
-        state = AsyncValue.error(e, s);
-      },
-    );
-  }
-
-  @override
-  void dispose() {
-    subscription?.cancel();
-    super.dispose();
   }
 }
