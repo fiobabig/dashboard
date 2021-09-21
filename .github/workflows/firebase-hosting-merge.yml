@@ -40,6 +40,9 @@ jobs:
       - name: Installing functions folder
         working-directory: functions
         run: yarn
+      - name: Clear out 'emulate' functions
+        working-directory: functions
+        run: echo > "lib/emulate.js"
       - uses: w9jds/firebase-action@master
         with:
           args: deploy --only functions,firestore:rules,storage
