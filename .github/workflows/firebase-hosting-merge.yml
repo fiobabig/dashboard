@@ -152,7 +152,7 @@ jobs:
         uses: actions/upload-artifact@master
         with:
           name: web-build
-          path: build/web
+          path: app/build/web
 
   deploy:
     runs-on: ubuntu-latest
