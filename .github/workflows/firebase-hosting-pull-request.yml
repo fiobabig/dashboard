@@ -48,7 +48,7 @@ jobs:
           yarn
 
       - name: Install Firebase Tools
-        run: yarn global add firebase-
+        run: yarn global add firebase
 
       - name: Install Functions
         working-directory: functions
