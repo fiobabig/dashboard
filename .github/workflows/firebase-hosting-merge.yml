@@ -160,11 +160,14 @@ jobs:
     needs: [firebase-rules, firebase-functions, flutter]
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
       - name: Download Artifact
         uses: actions/download-artifact@master
         with:
           name: web-build
-          path: web-build
+          path: app/build/web
 
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
