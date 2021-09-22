@@ -48,6 +48,7 @@ jobs:
           yarn --prefer-offline
 
       - name: Test Firebase rules
+        working-directory: rules
         run: firebase emulators:exec --only "firestore,storage" --project fiobabig-dashboard 'yarn test'
 
       - uses: subosito/flutter-action@v1
