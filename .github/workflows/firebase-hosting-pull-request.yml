@@ -48,7 +48,7 @@ jobs:
           yarn
 
       - name: Install Firebase Tools
-        run: yarn global add firebase
+        run: npm install -g firebase-tools
 
       - name: Test Firebase rules
         working-directory: rules
