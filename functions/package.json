@@ -10,7 +10,7 @@
     "logs": "firebase functions:log",
     "watch": "tsc --watch",
     "go": "firebase emulators:start --only functions",
-    "clear-emulator": "true > lib/emulate.js"
+    "clear-emulator": "echo. > lib/emulate.js"
   },
   "engines": {
     "node": "14"
