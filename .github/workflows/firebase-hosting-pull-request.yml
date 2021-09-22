@@ -14,7 +14,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
 
       - name: Cache firebase emulators
         uses: actions/cache@v2
@@ -37,11 +38,30 @@ jobs:
           npm install -g firebase-tools
           firebase emulators:exec --only "firestore,storage" --project fiobabig-dashboard 'yarn test'
 
+  firebase-functions:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Cache npm
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Build functions
+        working-directory: rules
+        run: |
+          npm i
+          npm run build
+
   flutter:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
 
       - name: Cache flutter
         uses: actions/cache@v2
