@@ -16,6 +16,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Cache npm
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
       - name: Cache flutter
         uses: actions/cache@v2
         with:
@@ -41,11 +49,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
+      - name: Install Firebase Tools globally
+        run: npm install -g firebase-tools
+
       - name: Install Rules dependencies
         working-directory: rules
-        run: |
-          yarn global add firebase-tools
-          yarn --prefer-offline
+        run: yarn --prefer-offline
 
       - name: Test Firebase rules
         working-directory: rules
