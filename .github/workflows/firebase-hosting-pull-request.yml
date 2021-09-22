@@ -48,7 +48,13 @@ jobs:
           yarn
 
       - name: Install Firebase Tools
-        run: yarn global add firebase-tools
+        run: yarn global add firebase-
+
+      - name: Install Functions
+        working-directory: functions
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: |
+          yarn
 
       - name: Build Functions
         working-directory: functions
