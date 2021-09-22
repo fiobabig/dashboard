@@ -28,31 +28,31 @@ jobs:
           path: ~/.cache/firebase/emulators
           key: ${{ runner.os }}-firebase-emulators-${{ hashFiles('~/.cache/firebase/emulators/**') }}
 
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
+      # - name: Get yarn cache directory path
+      #   id: yarn-cache-dir-path
+      #   run: echo "::set-output name=dir::$(yarn cache dir)"
 
-      - name: Cache Yarn
-        uses: actions/cache@v2
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+      # - name: Cache Yarn
+      #   uses: actions/cache@v2
+      #   id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+      #   with:
+      #     path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+      #     key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-yarn-
 
-      - name: Install Rules
-        working-directory: rules
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
-        run: |
-          yarn
-
-      - name: Install Firebase Tools
-        run: npm install -g firebase-tools
+      # - name: Install Rules
+      #   working-directory: rules
+      #   if: steps.yarn-cache.outputs.cache-hit != 'true'
+      #   run: |
+      #     yarn
 
       - name: Test Firebase rules
         working-directory: rules
-        run: firebase emulators:exec --only "firestore,storage" --project fiobabig-dashboard 'yarn test'
+        run: |
+          npm ci
+          npm install -g firebase-tools
+          firebase emulators:exec --only "firestore,storage" --project fiobabig-dashboard 'yarn test'
 
       - uses: subosito/flutter-action@v1
         with:
