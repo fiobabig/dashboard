@@ -50,7 +50,7 @@ jobs:
       - name: Test Firebase rules
         working-directory: rules
         run: |
-          npm ci
+          npm i
           npm install -g firebase-tools
           firebase emulators:exec --only "firestore,storage" --project fiobabig-dashboard 'yarn test'
 
