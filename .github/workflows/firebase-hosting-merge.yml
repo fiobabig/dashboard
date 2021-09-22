@@ -25,7 +25,7 @@ jobs:
         with:
           path: /opt/hostedtoolcache/flutter
           key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}
-      - name: Cache firebase emulators
+      - name: Cache flutter
         uses: actions/cache@v2
         with:
           path: ~/.cache/firebase/emulators
