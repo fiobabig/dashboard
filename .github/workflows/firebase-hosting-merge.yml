@@ -20,12 +20,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Cache firebase emulators
+      - name: Cache flutter
         uses: actions/cache@v2
         with:
           path: /opt/hostedtoolcache/flutter
           key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}
-      - name: Cache flutter
+      - name: Cache firebase emulators
         uses: actions/cache@v2
         with:
           path: ~/.cache/firebase/emulators

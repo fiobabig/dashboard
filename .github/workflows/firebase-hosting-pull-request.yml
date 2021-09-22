@@ -4,6 +4,9 @@
 name: Deploy to Firebase Hosting on PR
 "on": pull_request
 
+env:
+  flutter_version: "2.5.1"
+
 defaults:
   run:
     working-directory: app
@@ -13,9 +16,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Cache flutter
+        uses: actions/cache@v2
+        with:
+          path: /opt/hostedtoolcache/flutter
+          key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}
+      - name: Cache firebase emulators
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/firebase/emulators
+          key: ${{ runner.os }}-firebase-emulators-${{ hashFiles('~/.cache/firebase/emulators/**') }}
       - uses: subosito/flutter-action@v1
         with:
-          flutter-version: "2.2.2"
+          flutter-version: ${{ env.flutter_version }}
       - run: flutter pub get
       - run: flutter test
       - name: Test Firebase rules
@@ -25,10 +38,10 @@ jobs:
           npm install -g firebase-tools 
           firebase emulators:exec --only "firestore,storage" --project fiobabig-dashboard 'yarn test'
       - run: flutter build web
-      - uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_FIOBABIG_DASHBOARD }}"
-          projectId: fiobabig-dashboard
-        env:
-          FIREBASE_CLI_PREVIEWS: hostingchannels
+      # - uses: FirebaseExtended/action-hosting-deploy@v0
+      #   with:
+      #     repoToken: "${{ secrets.GITHUB_TOKEN }}"
+      #     firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_FIOBABIG_DASHBOARD }}"
+      #     projectId: fiobabig-dashboard
+      #   env:
+      #     FIREBASE_CLI_PREVIEWS: hostingchannels
