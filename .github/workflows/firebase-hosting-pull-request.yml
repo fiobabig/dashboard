@@ -46,6 +46,9 @@ jobs:
         working-directory: rules
         run: |
           yarn
+
+      - name: Install Firebase Tools
+        run: |
           yarn global add firebase-tools
 
       - name: Test Firebase rules
