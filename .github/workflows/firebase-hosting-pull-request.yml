@@ -51,7 +51,7 @@ jobs:
             ${{ runner.os }}-node-
 
       - name: Build functions
-        working-directory: rules
+        working-directory: functions
         run: |
           npm i
           npm run build
