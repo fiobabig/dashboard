@@ -44,8 +44,8 @@ jobs:
       - name: Install Rules dependencies
         working-directory: rules
         run: |
-          yarn --prefer-offline
           yarn global add firebase-tools
+          yarn --prefer-offline
 
       - name: Test Firebase rules
         run: firebase emulators:exec --only "firestore,storage" --project fiobabig-dashboard 'yarn test'
