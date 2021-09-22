@@ -50,16 +50,6 @@ jobs:
       - name: Install Firebase Tools
         run: yarn global add firebase
 
-      - name: Install Functions
-        working-directory: functions
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
-        run: |
-          yarn
-
-      - name: Build Functions
-        working-directory: functions
-        run: yarn build
-
       - name: Test Firebase rules
         working-directory: rules
         run: firebase emulators:exec --only "firestore,storage" --project fiobabig-dashboard 'yarn test'
