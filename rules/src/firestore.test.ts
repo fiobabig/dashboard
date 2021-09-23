@@ -1,7 +1,11 @@
-const { setup, teardown } = require("./helpers");
-const { serverTimestamp } = require("firebase/firestore");
-
-const { v4 } = require("uuid");
+import { serverTimestamp } from "firebase/firestore";
+import { v4 } from "uuid";
+import { clearFirestore, setup, setupData } from "./util";
+import {
+  itAllowsAccessToMyData,
+  itDeniesAccessToTheirData,
+  itDeniesByDefault,
+} from "./util/tests/firestore";
 
 const me = "me";
 const them = "them";
@@ -10,57 +14,64 @@ const dashboard = "dashboard";
 const tokenId = () => `tokens/${v4()}`;
 
 describe("Database Rules", () => {
-  afterAll(async () => await teardown());
+  afterEach(async () => await clearFirestore());
 
-  it("Denies reading and writing by default", async () => {
-    const db = (await setup()).firestore();
-    const ref = db.collection("does-not-exist");
-
-    await expect(ref.get()).toDeny();
-    await expect(ref.add({})).toDeny();
-  });
+  itDeniesByDefault();
 
   describe("When accessing a user...", () => {
-    it("Denies accessing another user's data", async () => {
-      const data = {
-        [`users/${me}`]: {
-          dashboards: {
-            [dashboard]: {},
-          },
+    const collection = "users";
+
+    itDeniesAccessToTheirData(collection, (uid) => ({
+      [`users/${uid}`]: {
+        dashboards: {
+          [dashboard]: {},
         },
-      };
+      },
+    }));
+    // it("Denies accessing another user's data", async () => {
+    //   const { firestore } = await setup(me);
 
-      const db = (await setup(me, data)).firestore();
-      const ref = db.doc(`users/${them}}`);
+    // await setupData({
+    //   [`users/${me}`]: {
+    //     dashboards: {
+    //       [dashboard]: {},
+    //     },
+    //   },
+    // });
 
-      await expect(ref.get()).toDeny();
-      await expect(ref.set({})).toDeny();
-    });
+    //   const ref = firestore.doc(`users/${them}}`);
 
-    it("Allows access to my user data", async () => {
-      const db = (await setup(me)).firestore();
-      const ref = db.doc(`users/${me}`);
+    //   await expect(ref.get()).toDeny();
+    //   await expect(ref.set({})).toDeny();
+    // });
 
-      await expect(ref.get()).toAllow();
-      await expect(ref.set({})).toAllow();
-    });
+    itAllowsAccessToMyData(collection);
+
+    // it("Allows access to my user data", async () => {
+    //   const { firestore } = await setup(me);
+
+    //   const ref = firestore.doc(`users/${me}`);
+
+    //   await expect(ref.get()).toAllow();
+    //   await expect(ref.set({})).toAllow();
+    // });
 
     it("Allows read-only access to my user data from one of my dashboards", async () => {
-      const data = {
+      const { firestore } = await setup(dashboard);
+
+      await setupData({
         [`users/${me}`]: {
           dashboards: {
             [dashboard]: {},
           },
         },
-      };
+      });
 
-      const db = (await setup(dashboard, data)).firestore();
-      const ref = db.doc(`users/${me}`);
+      const ref = firestore.doc(`users/${me}`);
 
       await expect(ref.get()).toAllow();
       await expect(ref.set({})).toDeny();
     });
- 
   });
 
   describe("When creating a token...", () => {
@@ -70,25 +81,25 @@ describe("Database Rules", () => {
     };
 
     it("Allows access to create a token", async () => {
-      const db = (await setup(dashboard)).firestore();
+      const { firestore } = await setup(dashboard);
 
-      const ref = db.doc(tokenId());
+      const ref = firestore.doc(tokenId());
 
       await expect(ref.set(validToken)).toAllow();
     });
 
     it("Denies access for another user", async () => {
-      const db = (await setup(them)).firestore();
+      const { firestore } = await setup(them);
 
-      const ref = db.doc(tokenId());
+      const ref = firestore.doc(tokenId());
 
       await expect(ref.set(validToken)).toDeny();
     });
 
     it("Denies access if invalid created timestamp", async () => {
-      const db = (await setup(dashboard)).firestore();
+      const { firestore } = await setup(dashboard);
 
-      const ref = db.doc(tokenId());
+      const ref = firestore.doc(tokenId());
 
       await expect(
         ref.set({
@@ -99,9 +110,9 @@ describe("Database Rules", () => {
     });
 
     it("Denies access if invalid properties", async () => {
-      const db = (await setup(dashboard)).firestore();
+      const { firestore } = await setup(dashboard);
 
-      const ref = db.doc(tokenId());
+      const ref = firestore.doc(tokenId());
 
       await expect(
         ref.set({
@@ -116,11 +127,11 @@ describe("Database Rules", () => {
       ${"createdAt"}
       ${"dashboardUid"}
     `("Denies if missing '$key'", async ({ key }) => {
-      const db = (await setup(dashboard)).firestore();
+      const { firestore } = await setup(dashboard);
 
-      const ref = db.doc(tokenId());
+      const ref = firestore.doc(tokenId());
 
-      const value = { ...validToken };
+      const value: { [key: string]: any } = { ...validToken };
       delete value[key];
 
       await expect(ref.set(value)).toDeny();
@@ -130,45 +141,48 @@ describe("Database Rules", () => {
   describe("When updating a token...", () => {
     it("Allows access for owner", async () => {
       const id = tokenId();
-      const data = {
+
+      const { firestore } = await setup(me);
+
+      await setupData({
         [id]: {
           ownerUid: me,
         },
-      };
+      });
 
-      const db = (await setup(me, data)).firestore();
-
-      const ref = db.doc(id);
+      const ref = firestore.doc(id);
 
       await expect(ref.set({}, { merge: true })).toAllow();
     });
 
     it("Denies access for owner", async () => {
       const id = tokenId();
-      const data = {
+
+      const { firestore } = await setup(me);
+
+      await setupData({
         [id]: {
           ownerUid: them,
         },
-      };
+      });
 
-      const db = (await setup(me, data)).firestore();
-
-      const ref = db.doc(id);
+      const ref = firestore.doc(id);
 
       await expect(ref.set({}, { merge: true })).toDeny();
     });
 
     it("Denies access if invalid properties", async () => {
       const id = tokenId();
-      const data = {
+
+      const { firestore } = await setup(dashboard);
+
+      await setupData({
         [id]: {
           ownerUid: dashboard,
         },
-      };
+      });
 
-      const db = (await setup(dashboard, data)).firestore();
-
-      const ref = db.doc(tokenId());
+      const ref = firestore.doc(tokenId());
 
       await expect(
         ref.set({ dashboardUid: "Faker" }, { merge: true })
