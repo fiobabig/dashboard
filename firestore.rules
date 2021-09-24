@@ -7,7 +7,7 @@ service cloud.firestore {
     }
 
     match /users/{uid} {
-      allow read: if isOwner(uid) || (request.auth.uid in resource.data.dashboards); 
+      allow read: if isOwner(uid) || hasReadRole(resource); 
       allow write: if isOwner(uid);
     }
 
@@ -20,21 +20,37 @@ service cloud.firestore {
     }
 
     match /dashboards/{uid} {
-      allow read, write: if isOwner(uid);
+      allow read: if isOwner(uid) || hasReadRole(resource);
+
+      allow write: if hasWriteRole(resource);
+
+      allow delete: if hasDeleteRole(resource);
     }
 
     match /rolestest/{doc} {
-      allow read: if hasRole(resource, ["read", "edit", "owner"]);
+      allow read: if hasReadRole(resource);
 
-      allow update: if hasRole(resource, ["edit", "owner"]);
+      allow update: if hasWriteRole(resource);
 
-      allow delete: if hasRole(resource, ["owner"]);
+      allow delete: if hasDeleteRole(resource);
     }
     
   }
 
   function isSignedIn() {
     return request.auth != null;
+  }
+
+  function hasReadRole(resource) {
+    return hasRole(resource, ["read", "edit", "owner"]);
+  }
+
+  function hasWriteRole(resource) {
+    return hasRole(resource, ["edit", "owner"]);
+  }
+
+  function hasDeleteRole(resource) {
+    return hasRole(resource, ["owner"]);
   }
 
   function hasRole(resource, roles) {

@@ -1,79 +1,59 @@
 import { serverTimestamp } from "firebase/firestore";
 import { v4 } from "uuid";
 import { clearFirestore, setup, setupData } from "./util";
+import { uid } from "./util/common";
 import {
   itAllowsAccessToMyData,
-  itAllowsDeleteForRoles,
-  itAllowsReadForRoles,
-  itAllowsWriteForRoles,
   itAllowsWriteForUser,
   itDeniesAccessToTheirData,
   itDeniesByDefault,
-  itDeniesDeleteForInvalidRoles,
-  itDeniesReadWithoutRole,
-  itDeniesWriteForInvalidRoles,
   itDeniesWriteForUser,
   itDeniesWriteIfIncludesDisallowedProperty,
   itDeniesWriteIfInvalidCreatedAt,
   itDeniesWriteIfMissingRequiredValue,
+  itHandlesReadOnlyRoles,
+  itRequiresRoles,
 } from "./util/tests/firestore";
 
-const me = "me";
-const them = "them";
 const dashboard = "dashboard";
 
 const tokenDocPath = () => `tokens/${v4()}`;
 
-describe("Database Rules", () => {
+describe("Firestore Rules", () => {
   afterEach(async () => await clearFirestore());
 
   itDeniesByDefault();
 
-  describe("Roles examples", () => {
-    const doc = "rolestest/test";
-    const validData = {};
-
-    itDeniesReadWithoutRole(doc);
-
-    itAllowsReadForRoles(doc);
-
-    itAllowsWriteForRoles(doc, validData);
-
-    itDeniesWriteForInvalidRoles(doc, validData);
-
-    itAllowsDeleteForRoles(doc);
-
-    itDeniesDeleteForInvalidRoles(doc);
+  describe("When accessing an example collection...", () => {
+    itRequiresRoles("rolestest", {});
   });
 
   describe("When accessing a user...", () => {
     const collection = "users";
 
-    itDeniesAccessToTheirData(collection, (uid) => ({
-      [`users/${uid}`]: {
+    itDeniesAccessToTheirData(collection, {
+      [`${collection}/${uid.them}`]: {
         dashboards: {
           [dashboard]: {},
         },
       },
-    }));
+    });
 
     itAllowsAccessToMyData(collection);
 
-    it("Allows read-only access to my user data from one of my dashboards", async () => {
-      const { firestore } = await setup(dashboard);
+    describe("While logged in as a dashboard...", () => {
+      const document = `${collection}/${uid.them}`;
 
-      await setupData({
-        [`users/${me}`]: {
+      itHandlesReadOnlyRoles(document, {
+        [document]: {
           dashboards: {
-            [dashboard]: {},
+            [uid.me]: {},
+          },
+          roles: {
+            [uid.me]: "read",
           },
         },
       });
-
-      const ref = firestore.doc(`users/${me}`);
-
-      await expect(ref.get()).toAllow();
-      await expect(ref.set({})).toDeny();
     });
   });
 
@@ -85,7 +65,7 @@ describe("Database Rules", () => {
 
     itAllowsWriteForUser(dashboard, tokenDocPath(), validToken);
 
-    itDeniesWriteForUser(them, tokenDocPath(), validToken);
+    itDeniesWriteForUser(uid.them, tokenDocPath(), validToken);
 
     itDeniesWriteIfInvalidCreatedAt(tokenDocPath(), validToken);
 
@@ -95,14 +75,21 @@ describe("Database Rules", () => {
   });
 
   describe("When updating a token...", () => {
+    const id = tokenDocPath();
+    itAllowsWriteForUser(uid.me, id, {
+      [id]: {
+        ownerUid: uid.me,
+      },
+    });
+
     it("Allows access for owner", async () => {
       const id = tokenDocPath();
 
-      const { firestore } = await setup(me);
+      const { firestore } = await setup(uid.me);
 
       await setupData({
         [id]: {
-          ownerUid: me,
+          ownerUid: uid.me,
         },
       });
 
@@ -114,11 +101,11 @@ describe("Database Rules", () => {
     it("Denies access for owner", async () => {
       const id = tokenDocPath();
 
-      const { firestore } = await setup(me);
+      const { firestore } = await setup(uid.me);
 
       await setupData({
         [id]: {
-          ownerUid: them,
+          ownerUid: uid.them,
         },
       });
 
@@ -149,6 +136,17 @@ describe("Database Rules", () => {
       await expect(
         ref.set({ createdAt: serverTimestamp() }, { merge: true })
       ).toDeny();
+    });
+  });
+
+  describe("When accessing a dashboard...", () => {
+    const collection = "dashboards";
+
+    itRequiresRoles(collection, {
+      roles: {
+        [uid.them]: "read",
+        [uid.me]: "owner",
+      },
     });
   });
 });

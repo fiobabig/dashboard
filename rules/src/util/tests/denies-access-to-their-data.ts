@@ -3,13 +3,13 @@ import { setupData } from "../firestore";
 
 export function itDeniesAccessToTheirData(
   collection: string,
-  data?: (uid: string) => Parameters<typeof setupData>[0]
+  data?: Parameters<typeof setupData>[0]
 ) {
   it(`Denies access to their ${collection} data`, async () => {
     const { firestore } = await setup(uid.me);
 
     if (data) {
-      await setupData(data(uid.me));
+      await setupData(data);
     }
 
     const ref = firestore.doc(`${collection}/${uid.them}}`);
