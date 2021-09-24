@@ -22,11 +22,23 @@ service cloud.firestore {
     match /dashboards/{uid} {
       allow read, write: if isOwner(uid);
     }
+
+    match /rolestest/{doc} {
+      allow read: if hasRole(resource, ["read", "edit", "owner"]);
+
+      allow update: if hasRole(resource, ["edit", "owner"]);
+
+      allow delete: if hasRole(resource, ["owner"]);
+    }
     
   }
 
   function isSignedIn() {
     return request.auth != null;
+  }
+
+  function hasRole(resource, roles) {
+    return isSignedIn() && resource.data.roles[request.auth.uid] in roles;
   }    
 
   function isOwner(uid) {

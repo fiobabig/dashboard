@@ -8,21 +8,17 @@ const db = admin
   .firestore();
 
 export async function setupData(
-  data:
-    | {
-        [key: string]: {};
-      }
-    | undefined = undefined
+  data: {
+    [key: string]: {};
+  }
 ) {
-  if (data) {
-    for (const key in data) {
-      const ref = db.doc(key);
+  for (const key in data) {
+    const ref = db.doc(key);
 
-      try {
-        await ref.set(data[key]);
-      } catch (err) {
-        console.log(err);
-      }
+    try {
+      await ref.set(data[key]);
+    } catch (err) {
+      console.log(err);
     }
   }
 }
