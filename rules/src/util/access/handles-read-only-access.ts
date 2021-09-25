@@ -3,14 +3,14 @@ import {
   itDeniesCreateForUser,
   itDeniesDeleteForUser,
   itDeniesUpdateForUser,
-} from "../tests/core";
+} from "./common";
 import {
   itAllowsReadUsingValidRoles,
   itDeniesCreateUsingInvalidRoles,
   itDeniesDeleteUsingInvalidRoles,
   itDeniesReadUsingInvalidRoles,
   itDeniesUpdateUsingInvalidRoles,
-} from "../tests/roles";
+} from "./roles";
 
 export function itHandlesReadOnlyAccess(collection: string) {
   describe("It allows read-only access for others with valid roles", () => {

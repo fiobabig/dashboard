@@ -1,6 +1,6 @@
 import { clearFirestore } from "../util";
+import { itAllowsReadForUser, itDeniesReadForUser } from "../util/access";
 import { uid } from "../util/common";
-import { itAllowsReadForUser, itDeniesReadForUser } from "../util/tests/core";
 
 describe("Firestore Rules", () => {
   afterEach(async () => await clearFirestore());

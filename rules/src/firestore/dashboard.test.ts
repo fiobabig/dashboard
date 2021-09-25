@@ -1,17 +1,15 @@
 import { clearFirestore } from "../util";
-import { uid } from "../util/common";
-import {
-  itAllowsReadForUser,
-  itDeniesCreateForUser,
-  itDeniesDeleteForUser,
-  itDeniesUpdateForUser,
-} from "../util/tests/core";
 import {
   itAllowsCreateUsingValidRoles,
   itAllowsDeleteUsingValidRoles,
+  itAllowsReadForUser,
   itAllowsReadUsingValidRoles,
   itAllowsUpdateUsingValidRoles,
-} from "../util/tests/roles";
+  itDeniesCreateForUser,
+  itDeniesDeleteForUser,
+  itDeniesUpdateForUser,
+} from "../util/access";
+import { uid } from "../util/common";
 
 describe("Firestore Rules", () => {
   afterEach(async () => await clearFirestore());

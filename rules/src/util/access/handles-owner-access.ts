@@ -8,7 +8,7 @@ import {
   itDeniesDeleteForUser,
   itDeniesReadForUser,
   itDeniesUpdateForUser,
-} from "../tests/core";
+} from "./common";
 
 export function itHandlesOwnerAccess(collection: string) {
   describe("It allows owner access while denying others", () => {
