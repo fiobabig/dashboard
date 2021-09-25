@@ -21,13 +21,13 @@ export const env = await initializeTestEnvironment({
   }, // why does storage require being set here and firestore require being set in the env var??
 });
 
-export const setup = async (uid: string | undefined = undefined) => {
+export const setup = async (uid: string) => {
   let context;
 
-  if (uid) {
-    context = env.authenticatedContext(uid);
-  } else {
+  if (uid == _uid.anonymous) {
     context = env.unauthenticatedContext();
+  } else {
+    context = env.authenticatedContext(uid);
   }
 
   return {
@@ -56,7 +56,9 @@ export const setup = async (uid: string | undefined = undefined) => {
   };
 })();
 
-export const uid = {
+const _uid = {
   me: "me",
   them: "them",
+  anonymous: "anonymous",
 };
+export const uid = _uid;

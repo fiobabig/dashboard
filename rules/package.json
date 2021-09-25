@@ -16,7 +16,7 @@
     "build": "tsc",
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --forceExit --detectOpenHandles",
     "test:loud": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --forceExit --detectOpenHandles --verbose",
-    "test:watch": "jest --watch --detectOpenHandles"
+    "test:watch": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --watch --detectOpenHandles"
   },
   "dependencies": {
     "uuid": "^8.3.2"

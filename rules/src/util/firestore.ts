@@ -1,5 +1,5 @@
 import { default as admin } from "firebase-admin";
-import { env, projectId } from "./common";
+import { env, projectId, setup } from "./common";
 
 const db = admin
   .initializeApp({
@@ -7,11 +7,11 @@ const db = admin
   })
   .firestore();
 
-export async function setupData(
-  data: {
-    [key: string]: {};
-  }
-) {
+export interface StoredData {
+  [key: string]: {};
+}
+
+export async function setupData(data: StoredData) {
   for (const key in data) {
     const ref = db.doc(key);
 
@@ -25,4 +25,18 @@ export async function setupData(
 
 export async function clearFirestore() {
   await env.clearFirestore();
+}
+
+export async function setupDoc(
+  document: string,
+  uid: string,
+  existingData?: StoredData
+) {
+  const { firestore } = await setup(uid);
+
+  if (existingData) {
+    await setupData(existingData);
+  }
+
+  return firestore.doc(document);
 }
