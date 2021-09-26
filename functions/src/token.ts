@@ -6,8 +6,9 @@ import { getCurrentWeather } from "./weather";
 
 const db = admin.firestore();
 
-export const onUpdate = functions.firestore
-  .document("tokens/{token}")
+export const onUpdate = functions
+  .region("us-west2")
+  .firestore.document("tokens/{token}")
   .onUpdate(async (change, context) => {
     const token = change.after.data() as Token;
 
