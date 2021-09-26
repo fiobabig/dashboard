@@ -9,7 +9,7 @@
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log",
     "watch": "tsc --watch",
-    "go": "firebase emulators:start --only functions",
+    "emu": "firebase emulators:start --only functions",
     "clear-emulator": "true > lib/emulate.js"
   },
   "engines": {

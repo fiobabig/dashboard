@@ -7,7 +7,7 @@ service cloud.firestore {
     }
 
     match /users/{uid} {
-      allow read: if isOwner(uid) || (request.auth.uid in resource.data.dashboards); 
+      allow read: if isOwner(uid) || hasReadRole(resource);
       allow write: if isOwner(uid);
     }
 
@@ -20,13 +20,74 @@ service cloud.firestore {
     }
 
     match /dashboards/{uid} {
-      allow read, write: if isOwner(uid);
+      allow read: if isOwner(uid) || hasReadRole(resource);
+
+      allow create: if hasCreateRole(request.resource);
+
+      allow update: if hasUpdateRole(resource);
+
+      allow delete: if hasDeleteRole(resource);
     }
     
+    ////////// Move to template later
+    //
+    // match /owner_only/{uid} {
+    //   allow read, write: if isOwner(uid);
+    // }
+
+    // match /roles_only/{uid} {
+    //   allow read: if hasReadRole(resource);
+
+    //   allow create: if hasCreateRole(request.resource);
+
+    //   allow update: if hasUpdateRole(resource);
+
+    //   allow delete: if hasDeleteRole(resource);
+    // }
+
+    // match /owner_or_roles/{uid} {
+    //   allow read: if isOwner(uid) || hasReadRole(resource);
+
+    //   allow create: if isOwner(uid) || hasCreateRole(request.resource);
+
+    //   allow update: if isOwner(uid) || hasUpdateRole(resource);
+
+    //   allow delete: if isOwner(uid) || hasDeleteRole(resource);
+    // }
+
+    // match /owner_or_readonly/{uid} {
+    //   allow read: if isOwner(uid) || hasReadRole(resource);
+
+    //   allow create: if isOwner(uid);
+
+    //   allow update: if isOwner(uid);
+
+    //   allow delete: if isOwner(uid);
+    // }
   }
 
   function isSignedIn() {
     return request.auth != null;
+  }
+
+  function hasReadRole(resource) {
+    return hasRole(resource, ["read", "edit", "admin"]);
+  }
+
+  function hasCreateRole(resource) {
+    return hasRole(resource, ["create", "edit", "admin"]);
+  }
+
+  function hasUpdateRole(resource) {
+    return hasRole(resource, ["update", "edit", "admin"]);
+  }
+
+  function hasDeleteRole(resource) {
+    return hasRole(resource, ["delete", "admin"]);
+  }
+
+  function hasRole(resource, roles) {
+    return isSignedIn() && resource.data.roles[request.auth.uid] in roles;
   }    
 
   function isOwner(uid) {
