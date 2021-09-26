@@ -1,15 +1,15 @@
-import * as functions from "firebase-functions";
-import * as admin from "firebase-admin";
-import axios from "axios";
 import { OwmClient } from "@curium.rocks/openweathermap-client";
-import { Day, Weather, WeatherIcon } from "./types";
+import axios from "axios";
+import * as admin from "firebase-admin";
 import { firestore } from "firebase-admin";
+import * as functions from "firebase-functions";
+import { Day, Weather, WeatherIcon } from "./types";
 
 const client = new OwmClient(axios);
 const db = admin.firestore();
 
 export const update = functions.https.onRequest(async (request, response) => {
-  const data = await db.collection("users").orderBy("location").get();
+  const data = await db.collection("dashboards").orderBy("location").get();
 
   for (const doc of data.docs) {
     const location: firestore.GeoPoint = doc.data().location;
@@ -31,7 +31,7 @@ export const update = functions.https.onRequest(async (request, response) => {
   response.send("Done");
 });
 
-async function getCurrentWeather(
+export async function getCurrentWeather(
   latitude: number,
   longitude: number
 ): Promise<[Weather, Day[]]> {

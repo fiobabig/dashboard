@@ -39,7 +39,7 @@ class Main extends HookConsumerWidget {
                     days: dashboard.days!,
                   ),
             const Text('photos:'),
-            dashboard.days == null
+            dashboard.photos == null
                 ? const Text('no gallery')
                 : GalleryDisplay(
                     photos: dashboard.photos!,
