@@ -90,7 +90,7 @@ jobs:
 
       - run: flutter build web
 
-      - run: cp app/build/web/index.publish.html app/build/web/index.html
+      - run: cp build/web/index.publish.html build/web/index.html
 
       - name: Archive Production Artifact
         uses: actions/upload-artifact@master
