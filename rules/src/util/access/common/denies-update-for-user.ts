@@ -1,15 +1,17 @@
 import { DocumentData } from "firebase/firestore";
 import { setupDoc } from "../..";
+import { describeIt } from "../../common";
 import { StoredData } from "../../firestore";
 
 export function itDeniesUpdateForUser(
   document: string,
   uid: string,
-  existingData: StoredData,
-  incomingData: DocumentData
+  storedData: StoredData,
+  incomingData: DocumentData,
+  reason?: string
 ) {
-  it(`Denies '${uid}' to update '${document}'`, async () => {
-    const ref = await setupDoc(document, uid, existingData);
+  describeIt(`Denies '${uid}' to update '${document}'`, reason, async () => {
+    const ref = await setupDoc(document, uid, storedData);
 
     await expect(ref.set(incomingData, { merge: true })).toDeny();
   });

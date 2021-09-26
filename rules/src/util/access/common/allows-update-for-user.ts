@@ -1,15 +1,17 @@
 import { DocumentData } from "firebase/firestore";
 import { setupDoc } from "../..";
+import { describeIt } from "../../common";
 import { StoredData } from "../../firestore";
 
 export function itAllowsUpdateForUser(
   document: string,
   uid: string,
-  existingData: StoredData,
-  incomingData: DocumentData
+  storedData: StoredData,
+  incomingData: DocumentData,
+  reason?: string
 ) {
-  it(`Allows '${uid}' to update '${document}'`, async () => {
-    const ref = await setupDoc(document, uid, existingData);
+  describeIt(`Allows '${uid}' to update '${document}'`, reason, async () => {
+    const ref = await setupDoc(document, uid, storedData);
 
     await expect(ref.set(incomingData, { merge: true })).toAllow();
   });

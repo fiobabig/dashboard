@@ -18,15 +18,15 @@ describe("Firestore Rules", () => {
     const document = `dashboards/${uid.me}`;
 
     itAllowsReadForUser(document, uid.me);
-    itAllowsReadUsingValidRoles(document, uid.me);
+    itAllowsReadUsingValidRoles(document, uid.them);
 
-    itDeniesCreateForUser(document, uid.me, {});
-    itAllowsCreateUsingValidRoles(document, uid.me, {});
+    itDeniesCreateForUser(document, uid.them, {});
+    itAllowsCreateUsingValidRoles(document, uid.them, {});
 
-    itDeniesUpdateForUser(document, uid.me, {}, {});
-    itAllowsUpdateUsingValidRoles(document, uid.me, {}, {});
+    itDeniesUpdateForUser(document, uid.them, {}, {});
+    itAllowsUpdateUsingValidRoles(document, uid.them, {}, {});
 
-    itDeniesDeleteForUser(document, uid.me);
-    itAllowsDeleteUsingValidRoles(document, uid.me);
+    itDeniesDeleteForUser(document, uid.them);
+    itAllowsDeleteUsingValidRoles(document, uid.them);
   });
 });

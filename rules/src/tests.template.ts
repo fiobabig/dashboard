@@ -1,25 +1,23 @@
 import { clearFirestore } from "./util";
-import { uid } from "./util/common";
 import {
   itAllowsCreateForUser,
-  itAllowsDeleteForUser,
-  itAllowsReadForUser,
-  itAllowsUpdateForUser,
-  itDeniesCreateForUser,
-  itDeniesDeleteForUser,
-  itDeniesReadForUser,
-  itDeniesUpdateForUser,
-} from "./util/tests/core";
-import {
   itAllowsCreateUsingValidRoles,
+  itAllowsDeleteForUser,
   itAllowsDeleteUsingValidRoles,
+  itAllowsReadForUser,
   itAllowsReadUsingValidRoles,
+  itAllowsUpdateForUser,
   itAllowsUpdateUsingValidRoles,
+  itDeniesCreateForUser,
   itDeniesCreateUsingInvalidRoles,
+  itDeniesDeleteForUser,
   itDeniesDeleteUsingInvalidRoles,
+  itDeniesReadForUser,
   itDeniesReadUsingInvalidRoles,
+  itDeniesUpdateForUser,
   itDeniesUpdateUsingInvalidRoles,
-} from "./util/tests/roles";
+} from "./util/access";
+import { uid } from "./util/common";
 
 describe("Template Rules", () => {
   afterEach(async () => await clearFirestore());

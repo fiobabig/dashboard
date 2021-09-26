@@ -24,7 +24,7 @@ export const env = await initializeTestEnvironment({
 export const setup = async (uid: string) => {
   let context;
 
-  if (uid == _uid.anonymous) {
+  if (uid == _uid.unauthenticated) {
     context = env.unauthenticatedContext();
   } else {
     context = env.authenticatedContext(uid);
@@ -59,6 +59,20 @@ export const setup = async (uid: string) => {
 const _uid = {
   me: "me",
   them: "them",
-  anonymous: "anonymous",
+  unauthenticated: "unauthenticated",
 };
 export const uid = _uid;
+
+export function describeIt(
+  message: string,
+  reason: string | undefined,
+  body: () => Promise<void>
+) {
+  if (reason != null) {
+    describe(`${message}...`, () => {
+      it(reason, body);
+    });
+  } else {
+    it(message, body);
+  }
+}
