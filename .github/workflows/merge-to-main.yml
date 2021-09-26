@@ -131,3 +131,4 @@ jobs:
           args: deploy --only functions,firestore:rules,storage
         env:
           FIREBASE_TOKEN: ${{ env.FIREBASE_TOKEN }}
+          PROJECT_ID: ${{ env.FIREBASE_PROJECT_ID }}
