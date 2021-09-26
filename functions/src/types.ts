@@ -3,8 +3,6 @@ import { firestore } from "firebase-admin";
 export interface User {
   uid: string;
   name: string;
-  location: firestore.GeoPoint;
-  weather: Weather;
 }
 
 export interface Weather {
@@ -50,4 +48,12 @@ export interface Tempurature {
 export interface Token {
   dashboardUid: string;
   ownerUid: string;
+}
+
+export interface Dashboard {
+  ownerUid: string;
+  days?: Day[];
+  location: firestore.GeoPoint;
+  weather?: Weather;
+  photos?: string[];
 }

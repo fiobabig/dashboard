@@ -1,6 +1,7 @@
 import * as admin from "firebase-admin";
+import { firestore } from "firebase-admin";
 import * as functions from "firebase-functions";
-import { Token } from "./types";
+import { Dashboard, Token } from "./types";
 import { getCurrentWeather } from "./weather";
 
 const db = admin.firestore();
@@ -16,7 +17,9 @@ export const onUpdate = functions.firestore
     const dashboardRef = db.doc(`dashboards/${token.dashboardUid}`);
     const tokenRef = db.doc(`tokens/${change.after.id}`);
 
-    const [weather, days] = await getCurrentWeather(47.63168, -117.23796);
+    const lat = 47.63168;
+    const lon = -117.23796;
+    const [weather, days] = await getCurrentWeather(lat, lon);
 
     batch.set(
       ownerRef,
@@ -34,7 +37,8 @@ export const onUpdate = functions.firestore
         ownerUid: token.ownerUid,
         weather,
         days,
-      },
+        location: new firestore.GeoPoint(lat, lon),
+      } as Dashboard,
       { merge: true }
     );
 

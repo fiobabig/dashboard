@@ -19,7 +19,7 @@ export const update = functions.https.onRequest(async (request, response) => {
       location.longitude
     );
 
-    await db.doc(`users/${doc.id}`).set(
+    await db.doc(`dashboards/${doc.id}`).set(
       {
         weather,
         days,
