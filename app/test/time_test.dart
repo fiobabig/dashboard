@@ -1,7 +1,7 @@
-import 'package:dashboard/provider/datetime.dart';
+import 'package:dashboard/feature/dashboard/feature/date_time/provider/date_time_provider.dart';
+import 'package:dashboard/feature/dashboard/feature/date_time/widget/time_display.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:dashboard/time/view/time_display.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 void main() {
